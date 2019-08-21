@@ -5,14 +5,31 @@ import (
 	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
 )
+
 // Requires a file path to the background image
 func drawBackground(r *sdl.Renderer, i string) error  {
-	t, err := img.LoadTexture(r, "./resources/backgrounds/dragon_of_the_north.jpg")
+	// Initialise pointer ;-)
+	var texture *sdl.Texture
+	/* Fixes issue #2 Crashes with segev null pointer Kubuntu 18.04
+	https://github.com/ricktimmis/gobandit/issues/2
+
+	Turns out that although SDL2 provides default src:nil dst:nil in renderer.Copy
+	on some systems the c.go lowlevel binding to C blows up. Probably because
+	src and dst use the unsafe.Pointer package. Declaring a rectangle layer the same
+	size as the window, and initialising it gives us a definite destination for the Copy.
+	3 hours it took me to debug that!!
+	 */
+	var dst = sdl.Rect{0,0,900,600}
+
+	texture, err := img.LoadTexture(r, i)
 	if err != nil {
-		return fmt.Errorf("Could not load bakground image : %v", err)
+		return fmt.Errorf("could not load background image : %v", err)
 	}
-	r.Copy(t, nil,nil)
-	return nil
+	err = r.Copy(texture, nil, &dst)
+	if err != nil {
+		return fmt.Errorf("could not render background image : %v", err)
+	}
+	return err
 }
 
 //func drawScene(r *sdl.Renderer) error {
