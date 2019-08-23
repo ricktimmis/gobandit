@@ -1,11 +1,15 @@
 package main
 
 import (
+	"github.com/spf13/viper"
 	"github.com/veandco/go-sdl2/sdl"
 	"os"
 )
 func main() {
 
+	viper.SetDefault("FilePath", "./resources/tile_images/Fruits/")
+	//viper.SetDefault("LayoutDir", "layouts")
+	//viper.SetDefault("Taxonomies", map[string]string{"tag": "tags", "category": "categories"})
 	// CONFIGURATION CONSTANTS
 	// Window dimensions
 	var width = int32(900)

@@ -15,3 +15,8 @@ https://www.deviantart.com/jacobtm92/art/Dragon-of-the-North-Free-Game-Backgroun
 
 For just being a splendid YouTuber, whose Flappy Gopher videos inspired me to 
 write this game.
+
+
+### Supporting Libraries
+
+https://github.com/spf13/viper
