@@ -29,7 +29,7 @@ func (t *Tile) init() {
 	t.face = make(map[int]string)
 	t.value = make(map[int]int)
 	t.currface = 1 // Keeping initial values simple
-	t.lastface = 0 // so we can use a simle inc to
+	t.lastface = 0 // so we can use a simple inc to
 	t.nextface = 2 // to move indexes
 	t.settotal = 0
 	t.index = make(map[int]int, 10)
@@ -37,7 +37,7 @@ func (t *Tile) init() {
 }
 
 // Loads data into the tile struct from passed config key value map
-func (t *Tile) Load() error {
+func (t *Tile) load() error {
 	t.imgpath = viper.GetString("FilePath")
 	files, err := ioutil.ReadDir(t.imgpath)
 	if err != nil {
@@ -86,6 +86,9 @@ func (t *Tile) Next() {
 		t.lastface = 0
 	}
 	t.currface++
+	if t.nextface == 0 {
+		t.currface = 0
+	}
 	t.nextface++
 	if t.currface == t.settotal {
 		t.nextface = 0
@@ -109,4 +112,14 @@ func (t *Tile) GetImage() string {
 	// FIXME Return pointer to the image as a []byte in memory for the current tileface
 	// Doing the above will remove the need for disk I/O
 	return t.imgpath+t.face[t.currface]
+}
+// GetTile Creates & Returns a pointer to a new tile instance, Factory style
+func (t *Tile) GetTile() *Tile {
+	var i = new(Tile)
+	i.init()
+	err := i.load()
+	if err !=nil{
+		panic(err)
+	}
+	return i
 }

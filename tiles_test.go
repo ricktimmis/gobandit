@@ -13,12 +13,12 @@ import (
 func TestTile(t *testing.T) {
 	// <setup code>
 	viper.SetDefault("FilePath", "./resources/tile_images/Fruits/")
-	tile := new(Tile)
-	tile.init()
-	err := tile.Load()
-	if err != nil {
-		t.Errorf("loading configuration failed with: %v", err)
-	}
+	ti := new(Tile)
+	//tile.Init()
+	tile := ti.GetTile()
+	//if err != nil {
+	//	t.Errorf("loading configuration failed with: %v", err)
+	//}
 
 	// Tests
 	t.Run("Tile Load", func(t *testing.T) { if len(tile.face) < 9 {
