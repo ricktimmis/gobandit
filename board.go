@@ -23,6 +23,7 @@ type Board struct {
 	Cols	int
 	Rows	int
 	Tiles   [8][8]*Tile // For now we'll limit the board to an 8 x 8 grid max
+	score	uint32 // We don't export this, but use Getter Setter instead
 
 }
 func (b * Board) Init(c int, r int, t TileSet) error{
@@ -45,4 +46,13 @@ func (b * Board) Init(c int, r int, t TileSet) error{
 	err := error(nil)
 	return err
 	
+}
+// Setter for adding int values to the score
+func (b *Board) ScoreAdd(v int) error{
+	err := error(nil)
+	return err
+}
+// Getter for retrieving current score
+func (b *Board) GetScore() uint32{
+	return 0
 }

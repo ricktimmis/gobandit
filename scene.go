@@ -36,9 +36,9 @@ func drawBoard(r *sdl.Renderer, b *Board) error {
 	// Work out positions sizes based upon Window Size and number
 	// of Columns and Rows in the board, iterate through the board applying face
 	// textures
-	// FIXME Hardcoded window width x height
-	colwidth := int32((900 / (b.Cols+2)))
-	rowheight := int32((600 / (b.Rows+2)))
+	// FIXME Refactor this int/int32 recasting, which will require board Cols and Rows to be int32,
+	colwidth := int32(int(width) / (b.Cols+2))
+	rowheight := int32(int(height) / (b.Rows+2))
 
 	x := colwidth
 	y := rowheight
@@ -60,6 +60,22 @@ func drawBoard(r *sdl.Renderer, b *Board) error {
 		x = colwidth
 	y = y + rowheight
 	}
+
+	/* Draw Score Panel
+	Avoiding a fixed score rectangle by calculating the score window as a percentage of the window.
+	20% (1/5) of width and height
+	 */
+	wide := width / 3
+	high := height / 10
+	x = (width / 2) - (wide / 2)
+	y = (height / 25)
+	var scoreborder = sdl.Rect{x, y, wide, high}
+	var scorepanel = sdl.Rect{(x + 5), (y + 5 ), (wide - 10), (high - 10)}
+	r.SetDrawColor(255,230,15,255)
+	r.FillRect(&scoreborder)
+	r.SetDrawColor(58,58,58,255)
+	r.FillRect(&scorepanel)
+
 	return nil
 }
 

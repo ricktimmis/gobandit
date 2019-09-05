@@ -9,14 +9,17 @@ import (
 	"time"
 )
 
+// CONFIGURATION GLOBALS & CONSTANTS
+// Window dimensions
+
+var width = int32(900)
+var height = int32(600)
+
 func main() {
 
 	viper.SetDefault("FilePath", "./resources/tile_images/Fruits/")
 
-	// CONFIGURATION CONSTANTS
-	// Window dimensions
-	var width = int32(900)
-	var height = int32(600)
+
 	// Pointer initialisation
 	var window *sdl.Window
 	var renderer *sdl.Renderer
