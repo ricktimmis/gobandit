@@ -5,7 +5,10 @@ awards. The user collects gold coins, to reach a given goal and is rewarded with
 
 # Architecture Synopsis
 
-GoBandit consists of a Scene, Control, Score, Board and Tile. 
+GoBandit consists of a Scene, Control, Score, Board and Tile. These are the implementation components each component implements an interface.
+
+Ensure you take a look at GoBandit App Architecture.mm ( This is a Freeplane file)
+
 ## Scene
 Scene is the visualisation for the current state of the game board. It expects to be passed a "Board" interface and a pointer to an SDL Surface.
 
@@ -13,7 +16,7 @@ Scene is the visualisation for the current state of the game board. It expects t
 Provides the user interface with controls such as "Play", "Nudge" and "Hold"
 Control is an interface
 
-## Score 
+## Scorer 
 Provides a total count of points accumulated during the game, and provides
 add, sub, get and reset methods
 

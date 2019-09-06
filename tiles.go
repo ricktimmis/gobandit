@@ -23,6 +23,25 @@ type Tile struct {
 
 }
 
+/*
+Tileset
+A Tileset provides the faces and values that will be displayed in the rows and columns of a Board.
+This abstraction enables tilesets to be created as pluggable components to the GoBandit game. Thus
+a Fruit machine game might hold a tileset of 6 fruits, or a playing card game would hold a
+tileset of 52 playing cards.
+*/
+type TileSet interface {
+	//Init()		bool 	// True for success
+	//Load()		bool 	// True for success
+	Count()		int  	// Number of tiles in the set
+	Shuffle()
+	Next()
+	GetFace()	string	// Returns the face name of the current tile
+	GetValue()	int		// Returns the value of the current tile
+	GetImage()	string	// Returns a filename for the tile image
+	GetTile()	*Tile	// Returns a pointer to the tile instance
+}
+
 // Constructor / Initialiser
 func (t *Tile) init() {
 	t.imgpath = ""

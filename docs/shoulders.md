@@ -20,3 +20,4 @@ write this game.
 ### Supporting Libraries
 
 https://github.com/spf13/viper
+https://github.com/veandco/go-sdl2
