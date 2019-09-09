@@ -28,6 +28,10 @@ func main() {
 
 	var err error
 	var board = new(Board)
+	var score = new(score)
+	// Initialise score, which saves us from having to pass the board pointer each time we call
+	// the checkScore function - see scene.go
+	score.init(board)
 
 	/* BACKGROUND IMAGE
 	FIXME This should be replaced with a folder traversing function that can load multiple backgrounds
@@ -109,6 +113,14 @@ func main() {
 			if start > iterations {
 				doiteration = false
 				iterate = false
+				v,err := checkScore(score)
+				if err !=nil{
+					fmt.Printf("Error checking score %v", err)
+				}
+				if v > 0 {
+					fmt.Printf("Match found and scored %d \n", v)
+				}
+				board.ScoreAdd(v)
 			}
 		}
 		for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
@@ -126,7 +138,7 @@ func main() {
 					fmt.Errorf("Hmm something went wrong : %v", err)
 				}
 			case *sdl.MouseButtonEvent:
-				fmt.Printf("MOUSE CLICK\n")
+				fmt.Printf("MOUSE CLICK -- Current Score = %d\n", board.score)
 				iterate = true
 
 			}

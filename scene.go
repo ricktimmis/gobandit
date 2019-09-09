@@ -88,3 +88,27 @@ func playNext(r *sdl.Renderer, b *Board) {
 	}
 	return
 }
+
+func checkScore(s *score,) (int, error){
+
+
+	// Define rules here to evaluate board and generate a score
+
+	// Rule 1 - Check each row for adjacent matching tile
+	rule1 := func(b *Board)int{
+		sum := 0
+		for r:=0; r != b.Rows; r++{
+			for c:=0; c < (b.Cols - 1); c++{
+				if (b.Tiles[r][c].GetFace()) == (b.Tiles[r][c+1].GetFace()){
+					sum = sum + b.Tiles[r][c].GetValue()
+					fmt.Printf("Row %d Columns %d and %d Matching %s \n", r, c, c+1, (b.Tiles[r][c].GetFace()))
+
+					// FIXME Call or setup a display routine, to highlight the match
+				}
+			}
+		}
+		return sum
+	}
+	v, err := s.evaluate(rule1)
+	return v, err
+}
