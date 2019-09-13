@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
+	"github.com/veandco/go-sdl2/ttf"
+	"strconv"
 )
 
 // Requires a file path to the background image
@@ -32,7 +34,7 @@ func drawBackground(r *sdl.Renderer, i string) error  {
 	return err
 }
 
-func drawBoard(r *sdl.Renderer, b *Board) error {
+func drawBoard(r *sdl.Renderer, b *Board, f *ttf.Font) error {
 	// Work out positions sizes based upon Window Size and number
 	// of Columns and Rows in the board, iterate through the board applying face
 	// textures
@@ -76,6 +78,27 @@ func drawBoard(r *sdl.Renderer, b *Board) error {
 	r.SetDrawColor(58,58,58,255)
 	r.FillRect(&scorepanel)
 
+	// Score
+
+	scorestring := strconv.Itoa(int(b.score))
+
+	textcolor := sdl.Color{255,230,15,20}
+	scoretextsurface, err := f.RenderUTF8Solid(scorestring, textcolor)
+	if err !=nil {
+		fmt.Errorf("Failed to Render score text")
+	}
+	scoretexture, err := r.CreateTextureFromSurface(scoretextsurface)
+	if err !=nil {
+		fmt.Errorf("Failed to Create score texture")
+	}
+	if r.Copy(scoretexture,nil,&scorepanel);  err !=nil {
+		fmt.Errorf("Failed to render score texture")
+	}
+	//if r.FillRect(&scorepanel); err !=nil {
+	//	fmt.Errorf("Failed to fill score panel")
+	//}
+
+	//RenderUTF8Solid(text string, color sdl.Color) (*sdl.Surface, error)
 	return nil
 }
 
