@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
+	"github.com/veandco/go-sdl2/ttf"
+	"strconv"
 )
 
 // Requires a file path to the background image
@@ -32,7 +34,7 @@ func drawBackground(r *sdl.Renderer, i string) error  {
 	return err
 }
 
-func drawBoard(r *sdl.Renderer, b *Board) error {
+func drawBoard(r *sdl.Renderer, b *Board, f *ttf.Font) error {
 	// Work out positions sizes based upon Window Size and number
 	// of Columns and Rows in the board, iterate through the board applying face
 	// textures
@@ -76,6 +78,27 @@ func drawBoard(r *sdl.Renderer, b *Board) error {
 	r.SetDrawColor(58,58,58,255)
 	r.FillRect(&scorepanel)
 
+	// Score
+
+	scorestring := strconv.Itoa(int(b.score))
+
+	textcolor := sdl.Color{255,230,15,20}
+	scoretextsurface, err := f.RenderUTF8Solid(scorestring, textcolor)
+	if err !=nil {
+		fmt.Errorf("Failed to Render score text")
+	}
+	scoretexture, err := r.CreateTextureFromSurface(scoretextsurface)
+	if err !=nil {
+		fmt.Errorf("Failed to Create score texture")
+	}
+	if r.Copy(scoretexture,nil,&scorepanel);  err !=nil {
+		fmt.Errorf("Failed to render score texture")
+	}
+	//if r.FillRect(&scorepanel); err !=nil {
+	//	fmt.Errorf("Failed to fill score panel")
+	//}
+
+	//RenderUTF8Solid(text string, color sdl.Color) (*sdl.Surface, error)
 	return nil
 }
 
@@ -87,4 +110,28 @@ func playNext(r *sdl.Renderer, b *Board) {
 		}
 	}
 	return
+}
+
+func checkScore(s *score,) (int, error){
+
+
+	// Define rules here to evaluate board and generate a score
+
+	// Rule 1 - Check each row for adjacent matching tile
+	rule1 := func(b *Board)int{
+		sum := 0
+		for r:=0; r != b.Rows; r++{
+			for c:=0; c < (b.Cols - 1); c++{
+				if (b.Tiles[r][c].GetFace()) == (b.Tiles[r][c+1].GetFace()){
+					sum = sum + b.Tiles[r][c].GetValue()
+					fmt.Printf("Row %d Columns %d and %d Matching %s \n", r, c, c+1, (b.Tiles[r][c].GetFace()))
+
+					// FIXME Call or setup a display routine, to highlight the match
+				}
+			}
+		}
+		return sum
+	}
+	v, err := s.evaluate(rule1)
+	return v, err
 }

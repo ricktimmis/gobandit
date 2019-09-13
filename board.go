@@ -1,5 +1,6 @@
 package main
 
+import "fmt"
 
 type Board struct {
 	Cols	int
@@ -31,10 +32,18 @@ func (b * Board) Init(c int, r int, t TileSet) error{
 }
 // Setter for adding int values to the score
 func (b *Board) ScoreAdd(v int) error{
-	err := error(nil)
+	// Recover if anything fails
+	var err = error(nil)
+	defer func() {
+		if err := recover(); err != nil {
+			err = fmt.Errorf("ScoreAdd failed with error: %v",err)
+		}
+	}()
+
+	b.score = b.score + uint32(v)
 	return err
 }
 // Getter for retrieving current score
 func (b *Board) GetScore() uint32{
-	return 0
+	return b.score
 }

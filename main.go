@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/viper"
 	"github.com/veandco/go-sdl2/sdl"
+	"github.com/veandco/go-sdl2/ttf"
 	"math/rand"
 	"os"
 	"time"
@@ -18,6 +19,7 @@ var height = int32(600)
 func main() {
 
 	viper.SetDefault("FilePath", "./resources/tile_images/Fruits/")
+	viper.SetDefault("FontFile", "./resources/fonts/open-sans/OpenSans-Regular.ttf")
 
 
 	// Pointer initialisation
@@ -28,6 +30,10 @@ func main() {
 
 	var err error
 	var board = new(Board)
+	var score = new(score)
+	// Initialise score, which saves us from having to pass the board pointer each time we call
+	// the checkScore function - see scene.go
+	score.init(board)
 
 	/* BACKGROUND IMAGE
 	FIXME This should be replaced with a folder traversing function that can load multiple backgrounds
@@ -74,6 +80,18 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	// Initialise a ttf font renderer
+	if err := ttf.Init();  err != nil {
+		panic(err)
+	}
+
+	font, err := ttf.OpenFont((viper.GetString("FontFile")), 320)
+	if err != nil {
+		panic(err)
+	}
+
+
 	err = drawBackground(renderer, bgimage)
 	if err != nil {
 		panic(err)
@@ -103,12 +121,20 @@ func main() {
 		}
 		if doiteration == true {
 			playNext(renderer, board)
-			drawBoard(renderer, board)
+			drawBoard(renderer, board, font)
 			sdl.Delay(10)
 			start++
 			if start > iterations {
 				doiteration = false
 				iterate = false
+				v,err := checkScore(score)
+				if err !=nil{
+					fmt.Printf("Error checking score %v", err)
+				}
+				if v > 0 {
+					fmt.Printf("Match found and scored %d \n", v)
+				}
+				board.ScoreAdd(v)
 			}
 		}
 		for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
@@ -121,12 +147,12 @@ func main() {
 				//fmt.Printf("[%d ms] Keyboard\ttype:%d\tsym:%c\tmodifiers:%d\tstate:%d\trepeat:%d\n",
 				//	event., event.Type, t.Keysym.Sym, t.Keysym.Mod, t.State, t.Repeat)
 				fmt.Printf("KEY PRESSED\n")
-				err = drawBoard(renderer, board)
+				err = drawBoard(renderer, board, font)
 				if err != nil {
 					fmt.Errorf("Hmm something went wrong : %v", err)
 				}
 			case *sdl.MouseButtonEvent:
-				fmt.Printf("MOUSE CLICK\n")
+				fmt.Printf("MOUSE CLICK -- Current Score = %d\n", board.score)
 				iterate = true
 
 			}
