@@ -22,7 +22,7 @@ func main() {
 	viper.SetDefault("FontFile", "./resources/fonts/open-sans/OpenSans-Regular.ttf")
 
 
-	// Pointer initialisation
+	// SDL Pointer initialisation
 	var window *sdl.Window
 	var renderer *sdl.Renderer
 	var surface *sdl.Surface

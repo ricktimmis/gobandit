@@ -1,4 +1,4 @@
-package main
+package example
 
 import "fmt"
 import "os"
@@ -10,7 +10,9 @@ const screenHeight = 480
 
 // https://markkeeley.us/2016/go-sdl2-lesson-2/
 
-func main() {
+//func main()
+func bbox()  {
+
 
 	err := sdl.Init(sdl.INIT_EVERYTHING)
 	if err != nil {

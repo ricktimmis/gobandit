@@ -1,6 +1,6 @@
 // author: Jacky Boen
 
-package main
+package example
 
 import (
 	"fmt"
