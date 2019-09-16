@@ -30,7 +30,7 @@ func (b * Board) Init(c int, r int, t TileSet) error{
 	return err
 	
 }
-// Setter for adding int values to the score
+// Setter for adding int values to the Score
 func (b *Board) ScoreAdd(v int) error{
 	// Recover if anything fails
 	var err = error(nil)
@@ -43,7 +43,7 @@ func (b *Board) ScoreAdd(v int) error{
 	b.score = b.score + uint32(v)
 	return err
 }
-// Getter for retrieving current score
+// Getter for retrieving current Score
 func (b *Board) GetScore() uint32{
 	return b.score
 }

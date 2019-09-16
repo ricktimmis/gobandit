@@ -11,7 +11,7 @@ func TestScorer(t *testing.T) {
 	viper.SetDefault("FilePath", "./resources/tile_images/Fruits/")
 	b := new(Board)
 	f := new(Tile)
-	s := new(score)
+	s := new(Score)
 	f.init()
 	f.load()
 	// here we initialise the board which will generate some data
@@ -23,7 +23,7 @@ func TestScorer(t *testing.T) {
 	// I don't have the answer to this yet, I was thinking about injecting a function with embedded
 	// logic. The receiving method executes the logic on the board tile slice.
 	// At this stage the function injection works
-	// FIXME Work out the logic to iterate through the board tileset and retrieve a score value. Will need to fix the Mock data above too
+	// FIXME Work out the logic to iterate through the board tileset and retrieve a Score value. Will need to fix the Mock data above too
 
 	t.Run("Score Evaluation", func(t *testing.T) {
 		rule := func(b *Board) int {
