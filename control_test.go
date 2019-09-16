@@ -10,7 +10,7 @@ func TestController(t *testing.T) {
 	viper.SetDefault("FilePath", "./resources/tile_images/Fruits/")
 	b := new(Board)
 	f := new(Tile)
-	s := new(score)
+	s := new(Score)
 	c := new(control)
 	f.init()
 	f.load()
