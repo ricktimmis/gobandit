@@ -59,7 +59,7 @@ func TestBoard(t *testing.T) {
 	})
 }
 
-// FIXME Work out whether the board holds a winning combo
+// FIXME Issue #4 Work out whether the board holds a winning combo
 // func TestBoard_Eval(t *testing.T){}
 
 

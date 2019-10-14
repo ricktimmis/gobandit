@@ -28,24 +28,6 @@ type controller interface {
 	init()
 }
 
-// All the interesting functions are here
-func (c *control) spin() error {
-	//err = renderer.Clear()
-	//if err != nil {
-	//	panic(err)
-	//}
-	c.spinimation()
-	return nil
-}
-
-func (c *control) hold() {
-	return
-}
-
-func (c *control) nudge() {
-	return
-}
-
 func (c *control) init() {
 	var err error
 	// Instantiate the other window elements
@@ -73,8 +55,27 @@ func (c *control) init() {
 	return
 }
 
+
+// All the interesting functions are here !
 // Implementation functions that do the work and the rendering
 // This is the stuff you want to mess with to get different game behaviour
+
+func (c *control) spin() error {
+	//err = renderer.Clear()
+	//if err != nil {
+	//	panic(err)
+	//}
+	c.spinimation()
+	return nil
+}
+
+func (c *control) hold() {
+	return
+}
+
+func (c *control) nudge() {
+	return
+}
 
 // FIXME - Requires a file path to the background image
 func (c *control) drawbackground(i string) error {

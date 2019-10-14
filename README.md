@@ -1,14 +1,14 @@
 # gobandit
 
 A flexible one arm Bandit game which emulates traditional and modern reel
-based gambling games. GoBandit can also be considered a flexible plugable game builder too.
+based gambling games. GoBandit can also be considered a flexible plug-able game builder too.
 
 
 
-Multiface tilesets can be used to dress the reels, and a simple Fruit Reel set is included.
+Multi-face tile sets can be used to dress the reels, and a simple Fruit Reel set is included.
 It has a configurable play board which enables up to 8 rows and columns, and auto-configures the board and tile sizes accordingly.
 
-A plugabble Scoring system is also provided, enabling a variety of scoring mechanisms to be implemented, and access via a scorecard interface.
+A plug-able Scoring system is also provided, enabling a variety of scoring mechanisms to be implemented, and accessed via a scorecard interface.
 
 ![Go Bandit game screenshot](./docs/screenshot1.png "Screenshot version 0.75")
 
