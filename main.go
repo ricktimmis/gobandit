@@ -19,7 +19,6 @@ func main() {
 	viper.SetDefault("FilePath", "./resources/tile_images/Fruits/")
 	viper.SetDefault("FontFile", "./resources/fonts/open-sans/OpenSans-Regular.ttf")
 
-
 	// SDL Pointer initialisation
 	var window *sdl.Window
 	var renderer *sdl.Renderer
@@ -48,9 +47,8 @@ func main() {
 	}
 	defer window.Destroy()
 
-
 	// Initialise a ttf font renderer
-	if err := ttf.Init();  err != nil {
+	if err := ttf.Init(); err != nil {
 		panic(err)
 	}
 	defer ttf.Quit()
@@ -68,18 +66,18 @@ func main() {
 	score.init(board)
 
 	// Initialise the Board
-	ti := new(Tile)  // FIXME This is coupling to tiles.go, and it must not
+	ti := new(Tile) // FIXME This is coupling to tiles.go, and it must not
 	board.Init(3, 4, ti)
 
 	// Control is where the action is.... more to come here
 	var controller = control{
-							false,
-							board,
-							score,
-							window,
-							font,
-							renderer,
-							surface,
+		false,
+		board,
+		score,
+		window,
+		font,
+		renderer,
+		surface,
 	}
 	// Initialise the controller
 	controller.init()

@@ -19,7 +19,6 @@ func TestController(t *testing.T) {
 	// Pass a pointer for the board to the Scorer
 	s.init(b)
 
-
 	t.Run("Control Spin", func(t *testing.T) {
 		rule := func(b *Board) int {
 			// For this test evaluation we know we have a number of tiles, with a minimum value of 10 per tile
@@ -46,9 +45,10 @@ func TestController(t *testing.T) {
 			t.Errorf("evaluation failed with error %v", err)
 		}
 		if v1 == v2 {
-		t.Errorf("Spin() failed to change board values")}
+			t.Errorf("Spin() failed to change board values")
+		}
 	})
-	t.Run(" Control Hold", func(t *testing.T){
+	t.Run(" Control Hold", func(t *testing.T) {
 		// We can test behaviour again here. This time we Spin the board take a sum
 		// Hold all columns and Spin again
 		// Take a second sum and compare them. They should be the same if all columns were held.
@@ -78,13 +78,14 @@ func TestController(t *testing.T) {
 			t.Errorf("evaluation failed with error %v", err)
 		}
 		if v1 != v2 {
-			t.Errorf("Hold() failed to retain columns change board values")}
+			t.Errorf("Hold() failed to retain columns change board values")
+		}
 	})
-	t.Run(" Control Nudge", func(t *testing.T){
-		// This time we Spin the board take a sum, then read ahead the next face values in the tileset ;-)
+	t.Run(" Control Nudge", func(t *testing.T) {
+		// This time we Spin the board take a sum, then read ahead and sum the next face values in the tileset ;-)
 		// Nudge the columns and Sum again
-		// Take a second sum and compare them. They should be the same if all columns were held.
-		// FIXME The above needs implementing...
+		// Compare with the read ahead sum. They should be the same if all columns were nudged 1 place.
+		// FIXME Issue #5 Nudge Feature
 		rule := func(b *Board) int {
 			sum := 0
 			for r := 0; r != b.Rows; r++ {
@@ -111,6 +112,7 @@ func TestController(t *testing.T) {
 			t.Errorf("evaluation failed with error %v", err)
 		}
 		if v1 != v2 {
-			t.Errorf("Hold() failed to retain columns change board values")}
+			t.Errorf("Hold() failed to retain columns change board values")
+		}
 	})
 }

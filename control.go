@@ -12,9 +12,9 @@ import (
 )
 
 type control struct {
-	ready    bool			// Defines if GO button is lit or not
-	board    *Board 		//FIXME - Switch this out for an interface
-	score    *Score 		//FIXME - Switch this out for an interface
+	ready    bool   // Defines if GO button is lit or not
+	board    *Board //FIXME - Switch this out for an interface
+	score    *Score //FIXME - Switch this out for an interface
 	window   *sdl.Window
 	font     *ttf.Font
 	renderer *sdl.Renderer // Initialised here
@@ -26,24 +26,6 @@ type controller interface {
 	hold()
 	nudge()
 	init()
-}
-
-// All the interesting functions are here
-func (c *control) spin() error {
-	//err = renderer.Clear()
-	//if err != nil {
-	//	panic(err)
-	//}
-	c.spinimation()
-	return nil
-}
-
-func (c *control) hold() {
-	return
-}
-
-func (c *control) nudge() {
-	return
 }
 
 func (c *control) init() {
@@ -73,8 +55,26 @@ func (c *control) init() {
 	return
 }
 
+// All the interesting functions are here !
 // Implementation functions that do the work and the rendering
 // This is the stuff you want to mess with to get different game behaviour
+
+func (c *control) spin() error {
+	//err = renderer.Clear()
+	//if err != nil {
+	//	panic(err)
+	//}
+	c.spinimation()
+	return nil
+}
+
+func (c *control) hold() {
+	return
+}
+
+func (c *control) nudge() {
+	return
+}
 
 // FIXME - Requires a file path to the background image
 func (c *control) drawbackground(i string) error {
@@ -131,8 +131,8 @@ func (c *control) drawboard() error {
 		y = y + rowheight
 	}
 	/* Draw control buttons
-	*/
-	for col := 0; col < (c.board.Cols); col++{
+	 */
+	for col := 0; col < (c.board.Cols); col++ {
 		var dst = sdl.Rect{(x + 10), y, (colwidth - 20), rowheight}
 		// FIXME - Implement a range of buttons, including hold, nudge etc.
 		//         Need to load these through a function so that we can involve
@@ -154,12 +154,12 @@ func (c *control) drawboard() error {
 	   This checks the controllers ready state and draws one of two buttons
 	   FIXME - This is a horrible, hardcoding shortcut to get the code into release, as it
 	           was required for a time bound magazine article...
-	 */
-	var dst = sdl.Rect{(width-125), y, 80, 80}
+	*/
+	var dst = sdl.Rect{(width - 125), y, 80, 80}
 	var button = ""
 	if c.ready {
 		button = "./resources/controller_assets/go_button_rdy.png"
-	}else{
+	} else {
 		button = "./resources/controller_assets/go_button.png"
 	}
 	texture, err := img.LoadTexture(c.renderer, button)
@@ -271,18 +271,18 @@ func (c *control) spinimation() error {
 			return err
 		}
 	}
-		c.ready = true
-		v, err := c.checkscore()
-		if err != nil {
-			return err
-		}
-		if v > 0 {
-			fmt.Printf("Match found and scored %d \n", v)
-		}
-		c.board.ScoreAdd(v)
-		c.drawboard()
-		if c.window.UpdateSurface(); err != nil {
-			return err
-		}
+	c.ready = true
+	v, err := c.checkscore()
+	if err != nil {
+		return err
+	}
+	if v > 0 {
+		fmt.Printf("Match found and scored %d \n", v)
+	}
+	c.board.ScoreAdd(v)
+	c.drawboard()
+	if c.window.UpdateSurface(); err != nil {
+		return err
+	}
 	return nil
 }

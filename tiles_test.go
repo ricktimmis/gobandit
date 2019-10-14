@@ -21,9 +21,10 @@ func TestTile(t *testing.T) {
 	//}
 
 	// Tests
-	t.Run("Tile Load", func(t *testing.T) { if len(tile.face) < 9 {
-		t.Errorf("could not parse 10 png files in %v", tile.imgpath)
-	}
+	t.Run("Tile Load", func(t *testing.T) {
+		if len(tile.face) < 9 {
+			t.Errorf("could not parse 10 png files in %v", tile.imgpath)
+		}
 		for _, v := range tile.face {
 			if !(strings.Contains(v, ".png")) {
 				t.Errorf("non PNG file loaded %v", v)
@@ -32,9 +33,9 @@ func TestTile(t *testing.T) {
 	})
 	t.Run("Tile Count", func(t *testing.T) {
 		if tile.Count() > 1 {
-		// Provided there is at least 1 tile in the set PASS
-		return
-	}
+			// Provided there is at least 1 tile in the set PASS
+			return
+		}
 		t.Errorf("Count of %v is too low", tile.Count())
 	})
 
@@ -54,17 +55,17 @@ func TestTile(t *testing.T) {
 		return
 	})
 
-	t.Run("Tile Next", func(t *testing.T){
+	t.Run("Tile Next", func(t *testing.T) {
 		// FIXME A bit messy Rick, clean this up
 		t1 := tile.GetFace()
 		tile.Next()
 		t2 := tile.GetFace()
 		if t1 == t2 {
-				t.Fail()
-			}
+			t.Fail()
+		}
 		return
 	})
-	t.Run("Tile GetImage", func(t *testing.T){
+	t.Run("Tile GetImage", func(t *testing.T) {
 		s := tile.GetImage()
 		if strings.Contains(s, ".jpg") {
 			return
@@ -75,7 +76,7 @@ func TestTile(t *testing.T) {
 		t.Fail()
 		return
 	})
-	t.Run("Tile GetValue", func( t *testing.T){
+	t.Run("Tile GetValue", func(t *testing.T) {
 		i := tile.GetValue()
 		// Expect a non-zero value
 		if i > 0 {
