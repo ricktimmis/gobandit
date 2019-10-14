@@ -33,13 +33,13 @@ tileset of 52 playing cards.
 type TileSet interface {
 	//Init()		bool 	// True for success
 	//Load()		bool 	// True for success
-	Count()		int  	// Number of tiles in the set
+	Count() int // Number of tiles in the set
 	Shuffle()
 	Next()
-	GetFace()	string	// Returns the face name of the current tile
-	GetValue()	int		// Returns the value of the current tile
-	GetImage()	string	// Returns a filename for the tile image
-	GetTile()	*Tile	// Returns a pointer to the tile instance
+	GetFace() string  // Returns the face name of the current tile
+	GetValue() int    // Returns the value of the current tile
+	GetImage() string // Returns a filename for the tile image
+	GetTile() *Tile   // Returns a pointer to the tile instance
 }
 
 // Constructor / Initialiser
@@ -101,7 +101,7 @@ func (t *Tile) Shuffle() {
 func (t *Tile) Next() {
 	if t.lastface != t.settotal {
 		t.lastface++
-	}else {
+	} else {
 		t.lastface = 0
 	}
 	t.currface++
@@ -126,18 +126,20 @@ func (t *Tile) GetFace() string {
 func (t *Tile) GetValue() int {
 	return t.value[t.currface]
 }
+
 // GetImage returns path to the image on disc
 func (t *Tile) GetImage() string {
 	// FIXME Return pointer to the image as a []byte in memory for the current tileface
 	// Doing the above will remove the need for disk I/O
-	return t.imgpath+t.face[t.currface]
+	return t.imgpath + t.face[t.currface]
 }
+
 // GetTile Creates & Returns a pointer to a new tile instance, Factory style
 func (t *Tile) GetTile() *Tile {
 	var i = new(Tile)
 	i.init()
 	err := i.load()
-	if err !=nil{
+	if err != nil {
 		panic(err)
 	}
 	return i

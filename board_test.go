@@ -47,13 +47,13 @@ func TestBoard(t *testing.T) {
 
 	})
 
-	t.Run("Test Score", func(t *testing.T){
+	t.Run("Test Score", func(t *testing.T) {
 		b.ScoreAdd(100)
-		if b.GetScore() != 100{
+		if b.GetScore() != 100 {
 			t.Errorf("Expected Score of 100, got %v", b.GetScore())
 		}
 		b.ScoreAdd(50)
-		if b.GetScore() !=150{
+		if b.GetScore() != 150 {
 			t.Errorf("Expected Score increase to 150, got %v", b.GetScore())
 		}
 	})
@@ -61,5 +61,3 @@ func TestBoard(t *testing.T) {
 
 // FIXME Issue #4 Work out whether the board holds a winning combo
 // func TestBoard_Eval(t *testing.T){}
-
-

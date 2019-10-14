@@ -11,8 +11,7 @@ const screenHeight = 480
 // https://markkeeley.us/2016/go-sdl2-lesson-2/
 
 //func main()
-func bbox()  {
-
+func bbox() {
 
 	err := sdl.Init(sdl.INIT_EVERYTHING)
 	if err != nil {

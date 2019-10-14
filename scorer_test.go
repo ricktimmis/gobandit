@@ -19,7 +19,6 @@ func TestScorer(t *testing.T) {
 	// Pass a pointer for the board to the Scorer
 	s.init(b)
 
-
 	// I don't have the answer to this yet, I was thinking about injecting a function with embedded
 	// logic. The receiving method executes the logic on the board tile slice.
 	// At this stage the function injection works
@@ -33,8 +32,8 @@ func TestScorer(t *testing.T) {
 			// each tile instance has multiple faces, and values and that we need to get an index value for
 			// the current face, to then be able to look up its value from the possible face/values in the set
 			sum := 0
-			for r:=0; r != b.Rows; r++{
-				for c := 0; c != b.Cols; c++{
+			for r := 0; r != b.Rows; r++ {
+				for c := 0; c != b.Cols; c++ {
 					i := b.Tiles[r][c].currface
 					v := b.Tiles[r][c].value[i]
 					sum = sum + v
@@ -49,7 +48,7 @@ func TestScorer(t *testing.T) {
 		if v == 0 {
 			t.Errorf("Expected zero, got %v", v)
 		}
-		fmt.Printf("Board value in this test was %v",v)
+		fmt.Printf("Board value in this test was %v", v)
 	})
 
 }
