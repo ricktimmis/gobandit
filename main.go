@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/spf13/viper"
+	"github.com/veandco/go-sdl2/mix"
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/ttf"
 )
@@ -18,6 +19,7 @@ func main() {
 	// FIXME Implement loadable configuration from a local .cfg file
 	viper.SetDefault("FilePath", "./resources/tile_images/Fruits/")
 	viper.SetDefault("FontFile", "./resources/fonts/open-sans/OpenSans-Regular.ttf")
+	viper.SetDefault("backgrndmusic", "./resources/sound/music/halloween.wav")
 
 	// SDL Pointer initialisation
 	var window *sdl.Window
@@ -57,6 +59,43 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	// Initialise Audio and sound effects
+	/*
+	Use these constants to enable format support
+	https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_9.html
+	This cheatsheet will likely help to
+	https://yourbasic.org/golang/bitwise-operator-cheat-sheet/
+	 */
+	//const (
+	//	MIX_INIT_FLAC 	= 1
+	//	MIX_INIT_MOD	= 1
+	//	MIX_INIT_MP3	= 1
+	//	MIX_INIT_OGG	= 1
+	//)
+	//flags := mix.INIT_MOD
+	//if err := mix.Init(flags); err != nil{
+	//	fmt.Printf("Audio initialisation failed with error: %v \n", err)
+	//}
+	/* Opening the audio for output.
+	To Grok the Output Format I had to do a little research to understand it(ish)
+	To follow this you'll need the following link.
+	https://github.com/emscripten-ports/SDL2/blob/master/include/SDL_audio.h
+	http://soundfile.sapp.org/doc/WaveFormat/
+	Do read the GoDocs, and SDL reference before the links above
+	*/
+	if err := sdl.Init(sdl.INIT_AUDIO); err != nil {
+		panic(err)
+	}
+	if err := mix.OpenAudio(22050,16,2,4096); err != nil{
+		fmt.Printf("Audio failed to open for Output with error: %v", err)
+	}
+	backgrndmusic, err := mix.LoadMUS(viper.GetString("backgrndmusic"))
+	if err != nil{
+		fmt.Printf("Audio failed loading background music with error: %v",err)
+	}
+	// Let music play
+	backgrndmusic.Play(-1)
 
 	// Board is a model of the game, it holds a tileset for each column
 	var board = new(Board)

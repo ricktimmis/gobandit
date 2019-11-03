@@ -28,3 +28,12 @@ placeholder size accordingly. It must respond to Control calls, and Scene calls
 # Tile
 A Tile is a single set of faces and values which are used to populate a tileset, which
 inturn is utilised by the Board 
+
+# Sound and Audio Effects
+The game should provide background music, as some form of loop along with a variety of
+special effects. For example spining the reels, and pressing the Go button.
+Audio should also be themed, (see Issue #.. Themes) such that the background loops and
+sound effects can be different for each game pack.
+## Design idea
+My idea is to take a foray into Go Routines, enabling us to call the Sounds for playback
+whilst still continuing on with game play
