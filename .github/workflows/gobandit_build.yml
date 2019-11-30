@@ -26,7 +26,7 @@ jobs:
 
     - name: Get dependencies
       run: |
-        apt install libsdl2{,-image,-mixer,-ttf,-gfx}-dev
+        sudo apt install libsdl2{,-image,-mixer,-ttf,-gfx}-dev
         go get -v -t -d ./...
         if [ -f Gopkg.toml ]; then
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
