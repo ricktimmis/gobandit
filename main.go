@@ -73,12 +73,17 @@ func main() {
 	//board.Init(3, 4, ti)
 	board.Init(5, 4, ti)
 
+	// SoundFX
+	var soundfx = new(sound)
+	soundfx.Init()
+
 	// Control is where the action is.... more to come here
 	var controller = control{
 		0,
 		false,
 		board,
 		score,
+		soundfx,
 		window,
 		font,
 		renderer,

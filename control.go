@@ -16,6 +16,7 @@ type control struct {
 	ready    bool   // Defines if GO button is lit or not
 	board    *Board //FIXME - Switch this out for an interface
 	score    *Score //FIXME - Switch this out for an interface
+	soundfx  *sound //FIXME - Switch this out for an interface
 	window   *sdl.Window
 	font     *ttf.Font
 	renderer *sdl.Renderer // Initialised here
@@ -54,6 +55,7 @@ func (c *control) init() {
 	c.drawbackground(bgimage)
 	c.ready = true
 	c.drawboard()
+
 	return
 }
 
@@ -252,9 +254,9 @@ func (c *control) checkscore() (int, error) {
 func (c *control) spinimation() error {
 
 	// Start music - see sound.go
-	sounds := sound{}
-	sounds.init()
-	sounds.Playspinsoundfx()
+	//sounds := sound{}
+	//sounds.Init()
+	c.soundfx.Playspinsoundfx()
 
 	rand.Seed(time.Now().UnixNano())
 	min := 50
@@ -267,19 +269,19 @@ func (c *control) spinimation() error {
 	}
 
 	/*
-	columnstops work by making each column from left to right appear to stop before the other
-	by dividing the number of iterations for this spin by the columns on the board we calculate a value at which
-	we increment the col parameter to be passed into play next().
-	 */
+		columnstops work by making each column from left to right appear to stop before the other
+		by dividing the number of iterations for this spin by the columns on the board we calculate a value at which
+		we increment the col parameter to be passed into play next().
+	*/
 	columnstops := iterations / c.board.Cols
 	iterationspercolumn := columnstops
 	columnlocked := 0
 
 	for i := 0; i < iterations; i++ {
 		if i > columnstops {
-			columnlocked ++
+			columnlocked++
 			columnstops = columnstops + iterationspercolumn
-			sounds.Playcolumnstopfx()
+			c.soundfx.Playcolumnstopfx()
 		}
 		c.ready = false // Defines if GO button is lit or not
 		c.playnext(columnlocked)
@@ -290,7 +292,7 @@ func (c *control) spinimation() error {
 			return err
 		}
 	}
-	sounds.Playcolumnstopfx()
+	c.soundfx.Playcolumnstopfx()
 	c.ready = true
 	v, err := c.checkscore()
 	if err != nil {
