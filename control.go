@@ -12,9 +12,11 @@ import (
 )
 
 type control struct {
+	debounce int    // We use debounce to filter out multiple queued SDL_events e.g Mouse Clicks, or KeyDown
 	ready    bool   // Defines if GO button is lit or not
 	board    *Board //FIXME - Switch this out for an interface
 	score    *Score //FIXME - Switch this out for an interface
+	soundfx  *sound //FIXME - Switch this out for an interface
 	window   *sdl.Window
 	font     *ttf.Font
 	renderer *sdl.Renderer // Initialised here
@@ -51,7 +53,9 @@ func (c *control) init() {
 		panic(err)
 	}
 	c.drawbackground(bgimage)
+	c.ready = true
 	c.drawboard()
+
 	return
 }
 
@@ -64,7 +68,9 @@ func (c *control) spin() error {
 	//if err != nil {
 	//	panic(err)
 	//}
-	c.spinimation()
+	if c.ready {
+		c.spinimation()
+	}
 	return nil
 }
 
@@ -76,7 +82,7 @@ func (c *control) nudge() {
 	return
 }
 
-// FIXME - Requires a file path to the background image
+// FIXME - Requires a file path to the BackgroundMusic image
 func (c *control) drawbackground(i string) error {
 	// Initialise pointer ;-)
 	var texture *sdl.Texture
@@ -118,11 +124,11 @@ func (c *control) drawboard() error {
 			p := c.board.Tiles[row][col].GetImage()
 			texture, err := img.LoadTexture(c.renderer, p)
 			if err != nil {
-				return fmt.Errorf("could not load background image : %v", err)
+				return fmt.Errorf("could not load BackgroundMusic image : %v", err)
 			}
 			err = c.renderer.Copy(texture, nil, &dst)
 			if err != nil {
-				return fmt.Errorf("could not render background image : %v", err)
+				return fmt.Errorf("could not render BackgroundMusic image : %v", err)
 			}
 			x = x + colwidth
 		}
@@ -141,11 +147,11 @@ func (c *control) drawboard() error {
 		button := "./resources/controller_assets/nudge_button.png"
 		texture, err := img.LoadTexture(c.renderer, button)
 		if err != nil {
-			return fmt.Errorf("could not load background image : %v", err)
+			return fmt.Errorf("could not load BackgroundMusic image : %v", err)
 		}
 		err = c.renderer.Copy(texture, nil, &dst)
 		if err != nil {
-			return fmt.Errorf("could not render background image : %v", err)
+			return fmt.Errorf("could not render BackgroundMusic image : %v", err)
 		}
 		x = x + colwidth
 
@@ -164,11 +170,11 @@ func (c *control) drawboard() error {
 	}
 	texture, err := img.LoadTexture(c.renderer, button)
 	if err != nil {
-		return fmt.Errorf("could not load background image : %v", err)
+		return fmt.Errorf("could not load BackgroundMusic image : %v", err)
 	}
 	err = c.renderer.Copy(texture, nil, &dst)
 	if err != nil {
-		return fmt.Errorf("could not render background image : %v", err)
+		return fmt.Errorf("could not render BackgroundMusic image : %v", err)
 	}
 	/* Draw Score Panel
 	Avoiding a fixed Score rectangle by calculating the Score window as a percentage of the window.
@@ -212,9 +218,9 @@ func (c *control) drawboard() error {
 	return nil
 }
 
-func (ctrl *control) playnext() error {
+func (ctrl *control) playnext(col int) error {
 
-	for c := 0; c < ctrl.board.Cols; c++ {
+	for c := col; c < ctrl.board.Cols; c++ {
 		for r := 0; r < ctrl.board.Rows; r++ {
 			ctrl.board.Tiles[r][c].Next()
 		}
@@ -246,24 +252,39 @@ func (c *control) checkscore() (int, error) {
 }
 
 func (c *control) spinimation() error {
-	//iterate := false
-	//doiteration := false
-	//iterations := 0
-	//start := 0
 
-	// FIXME This logic is messy and confusing
-	// Why? - to avoid constantly calling into the SDL library to update the surface, which
-	// caused the Window renderer to stop performing updates. I have used conditional logic
-	// to define which calls are made when.
+	// Start music - see sound.go
+	//sounds := sound{}
+	//sounds.Init()
+	c.soundfx.Playspinsoundfx()
 
 	rand.Seed(time.Now().UnixNano())
-	min := 5
-	max := 20
+	min := 50
+	max := 400
 	iterations := (rand.Intn(max-min+1) + min)
+	// I noticed that for some spins there appeared to be a value less than 100, perhaps due to behaviour of
+	// rand. So this catches that, and fixes it.
+	if iterations < 50 {
+		iterations = 50
+	}
+
+	/*
+		columnstops work by making each column from left to right appear to stop before the other
+		by dividing the number of iterations for this spin by the columns on the board we calculate a value at which
+		we increment the col parameter to be passed into play next().
+	*/
+	columnstops := iterations / c.board.Cols
+	iterationspercolumn := columnstops
+	columnlocked := 0
 
 	for i := 0; i < iterations; i++ {
+		if i > columnstops {
+			columnlocked++
+			columnstops = columnstops + iterationspercolumn
+			c.soundfx.Playcolumnstopfx()
+		}
 		c.ready = false // Defines if GO button is lit or not
-		c.playnext()
+		c.playnext(columnlocked)
 		sdl.Delay(10)
 		c.drawboard()
 		err := c.window.UpdateSurface()
@@ -271,6 +292,7 @@ func (c *control) spinimation() error {
 			return err
 		}
 	}
+	c.soundfx.Playcolumnstopfx()
 	c.ready = true
 	v, err := c.checkscore()
 	if err != nil {

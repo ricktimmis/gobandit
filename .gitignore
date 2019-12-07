@@ -13,3 +13,7 @@
 
 # GoLand IDE Project configuration files
 /.idea
+
+# Development build binaries. Why ? Goland is jailed when installed as a snap, and can not access local sound system
+# so I setup a build config which makes a development build in the cwd. Then exclude it from git here
+gobandit.build 

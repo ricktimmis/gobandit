@@ -18,6 +18,9 @@ func main() {
 	// FIXME Implement loadable configuration from a local .cfg file
 	viper.SetDefault("FilePath", "./resources/tile_images/Fruits/")
 	viper.SetDefault("FontFile", "./resources/fonts/open-sans/OpenSans-Regular.ttf")
+	viper.SetDefault("backgrndmusic", "./resources/sound/music/halloween.wav")
+	viper.SetDefault("spinsoundfx", "./resources/sound/effects/producerspot-sfx-11.wav")
+	viper.SetDefault("columnstopfx", "./resources/sound/effects/Bounce.wav")
 
 	// SDL Pointer initialisation
 	var window *sdl.Window
@@ -67,13 +70,20 @@ func main() {
 
 	// Initialise the Board
 	ti := new(Tile) // FIXME This is coupling to tiles.go, and it must not
-	board.Init(3, 4, ti)
+	//board.Init(3, 4, ti)
+	board.Init(5, 4, ti)
+
+	// SoundFX
+	var soundfx = new(sound)
+	soundfx.Init()
 
 	// Control is where the action is.... more to come here
 	var controller = control{
+		0,
 		false,
 		board,
 		score,
+		soundfx,
 		window,
 		font,
 		renderer,
@@ -92,19 +102,28 @@ func main() {
 				running = false
 				break
 			case *sdl.KeyboardEvent:
-				//fmt.Printf("[%d ms] Keyboard\ttype:%d\tsym:%c\tmodifiers:%d\tstate:%d\trepeat:%d\n",
-				//	event., event.Type, t.Keysym.Sym, t.Keysym.Mod, t.State, t.Repeat)
-				fmt.Printf("KEY PRESSED\n")
-				err = controller.spin()
-				if err != nil {
-					fmt.Errorf("Hmm something went wrong : %v", err)
+				controller.debounce++
+				if controller.debounce == 1 {
+					fmt.Printf("KEY PRESSED -- Current Score = %d\n", board.score)
+					controller.debounce++
+					err = controller.spin()
+					if err != nil {
+						fmt.Errorf("Hmm something went wrong : %v", err)
+					}
 				}
 			case *sdl.MouseButtonEvent:
-				fmt.Printf("MOUSE CLICK -- Current Score = %d\n", board.score)
-				err = controller.spin()
-				if err != nil {
-					fmt.Errorf("Hmm something went wrong : %v", err)
+				controller.debounce++
+				if controller.debounce == 1 {
+					fmt.Printf("MOUSE CLICK -- Current Score = %d\n", board.score)
+					controller.debounce++
+					err = controller.spin()
+					if err != nil {
+						fmt.Errorf("Hmm something went wrong : %v", err)
+					}
 				}
+			}
+			if controller.debounce > 0 {
+				controller.debounce--
 			}
 		}
 	}

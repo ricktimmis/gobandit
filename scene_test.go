@@ -19,7 +19,7 @@ func TestdrawBackground(t *testing.T) {
 	}
 
 
-	// Test an existing background image
+	// Test an existing BackgroundMusic image
 	i := "./resources/backgrounds/dragon_of_the_north.jpg"
 
 	r, err := sdl.CreateSoftwareRenderer(surface)
