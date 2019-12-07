@@ -11,3 +11,4 @@ Refactor Board implementation to use Abstract TileSet interface - 2 hours
 Implement basic score primitives - 1.5 hours
 Scoring functional and implemented in game - 2.5 hours
 Get Fonts working for Scoreboard - 1 hour
+Fighting with Sound - 10 hours ( Dissappointing, but I got foxed by group permissions)
