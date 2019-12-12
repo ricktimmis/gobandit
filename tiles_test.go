@@ -2,11 +2,12 @@ package main
 
 import (
 	"github.com/spf13/viper"
+	"reflect"
 	"strings"
 	"testing"
 )
 
-// TestTile provides a single function wrapper for a suite of subtests that require a tile instance.
+// TestTile provides a single function wrapper for a suite of sub tests that require a tile instance.
 // approaching it in this way enables us to work with a single Tile instance, and provides the ability
 // for us to create interactive tests for behaviour later on.
 // See https://godoc.org/testing
@@ -28,6 +29,28 @@ func TestTile(t *testing.T) {
 		for _, v := range tile.face {
 			if !(strings.Contains(v, ".png")) {
 				t.Errorf("non PNG file loaded %v", v)
+			}
+		}
+		for i := 0; i < len(tile.face); i++ {
+			format, access, width, height, err := tile.facetexture[i].Query()
+			if err != nil {
+				t.Errorf("Querying facetexture failed with error: %v ", err)
+			}
+			typedef := reflect.Kind(format)
+			if typedef != reflect.Int32 {
+				t.Errorf("Querying facetexture failed incorrect type")
+			}
+			typedef = reflect.Kind(access)
+			if typedef != reflect.Int {
+				t.Errorf("Querying facetexture failed incorrect type")
+			}
+			typedef = reflect.Kind(width)
+			if typedef != reflect.Int {
+				t.Errorf("Querying facetexture failed incorrect type")
+			}
+			typedef = reflect.Kind(height)
+			if typedef != reflect.Int {
+				t.Errorf("Querying facetexture failed incorrect type")
 			}
 		}
 	})

@@ -22,13 +22,13 @@ func bbox() {
 	window, err := sdl.CreateWindow("Go + SDL2 Lesson 2", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
 		screenWidth, screenHeight, sdl.WINDOW_SHOWN)
 	if err != nil {
-		fmt.Fprint(os.Stderr, "Failed to create renderer: %s\n", err)
+		fmt.Fprint(os.Stderr, "Failed to create renderer: \n", err)
 		os.Exit(2)
 	}
 
 	renderer, err := sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
 	if err != nil {
-		fmt.Fprint(os.Stderr, "Failed to create renderer: %s\n", err)
+		fmt.Fprint(os.Stderr, "Failed to create renderer: \n", err)
 		os.Exit(2)
 	}
 	renderer.Clear()

@@ -61,6 +61,16 @@ func main() {
 		panic(err)
 	}
 
+	// Instantiate the other window elements
+	surface, err = window.GetSurface()
+	if err != nil {
+		panic(err)
+	}
+	// Initiliase the Renderer
+	renderer, err = sdl.CreateSoftwareRenderer(surface)
+	if err != nil {
+		panic(err)
+	}
 	// Board is a model of the game, it holds a tileset for each column
 	var board = new(Board)
 	// Initialise Score, which saves us from having to pass the board pointer each time we call
@@ -69,9 +79,10 @@ func main() {
 	score.init(board)
 
 	// Initialise the Board
-	ti := new(Tile) // FIXME This is coupling to tiles.go, and it must not
+	ti := new(Tile)
+	ti.SetRenderer(renderer)
 	//board.Init(3, 4, ti)
-	board.Init(5, 4, ti)
+	board.Init(5, 4, ti, renderer)
 
 	// SoundFX
 	var soundfx = new(sound)

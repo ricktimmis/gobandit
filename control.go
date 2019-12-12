@@ -32,16 +32,18 @@ type controller interface {
 
 func (c *control) init() {
 	var err error
+	/*
 	// Instantiate the other window elements
 	c.surface, err = c.window.GetSurface()
 	if err != nil {
 		panic(err)
 	}
-
+	/*
 	c.renderer, err = sdl.CreateSoftwareRenderer(c.surface)
 	if err != nil {
 		panic(err)
 	}
+	*/
 	/* BACKGROUND IMAGE
 	FIXME This should be replaced with a folder traversing function that can load multiple backgrounds
 	      once complete, then drawbackground can be refactored into drawboard too.
@@ -121,14 +123,14 @@ func (c *control) drawboard() error {
 	for row := 0; row < (c.board.Rows); row++ {
 		for col := 0; col < (c.board.Cols); col++ {
 			var dst = sdl.Rect{x, y, colwidth, rowheight}
-			p := c.board.Tiles[row][col].GetImage()
-			texture, err := img.LoadTexture(c.renderer, p)
+			texture := c.board.Tiles[row][col].GetTexture()
+			//texture, err := img.LoadTexture(c.renderer, p)
+			//if err != nil {
+			//	return fmt.Errorf("could not load Background image : %v", err)
+			//}
+			err := c.renderer.Copy(texture, nil, &dst)
 			if err != nil {
-				return fmt.Errorf("could not load BackgroundMusic image : %v", err)
-			}
-			err = c.renderer.Copy(texture, nil, &dst)
-			if err != nil {
-				return fmt.Errorf("could not render BackgroundMusic image : %v", err)
+				return fmt.Errorf("could not render Background image : %v", err)
 			}
 			x = x + colwidth
 		}
@@ -224,6 +226,11 @@ func (ctrl *control) playnext(col int) error {
 		for r := 0; r < ctrl.board.Rows; r++ {
 			ctrl.board.Tiles[r][c].Next()
 		}
+	}
+
+	// Reel style game implementation - FIXME This is just POC, ought to be done with an interface
+	for c := col; c < ctrl.board.Cols; c++ {
+
 	}
 	return nil
 }

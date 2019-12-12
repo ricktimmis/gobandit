@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"github.com/spf13/viper"
+	"github.com/veandco/go-sdl2/img"
+	"github.com/veandco/go-sdl2/sdl"
 	"io/ioutil"
 	"math/rand"
 	"strconv"
@@ -12,14 +15,16 @@ import (
 //for the tileset interface. Tile loads a data model meta information from the configuration, and expects
 //image assets to be provided as png files.
 type Tile struct {
-	imgpath  string         //path to png image assets
-	face     map[int]string // png image files
-	value    map[int]int    // value of each face
-	currface int
-	lastface int
-	nextface int
-	settotal int
-	index    map[int]int // map pointer to keep faces and values in sync
+	imgpath		  	string         			// path to png image assets
+	face		  	map[int]string 			// png image files
+	value	      	map[int]int    			// value of each face
+	facetexture		map[int]*sdl.Texture	// in memory SDL Texture for the imageface, utilised by the sdl.render
+	renderer		*sdl.Renderer			// Required to enable facetextures to load
+	currface 	  	int
+	lastface		int
+	nextface 		int
+	settotal 		int
+	index    		map[int]int // map pointer to keep faces and values in sync
 
 }
 
@@ -39,7 +44,7 @@ type TileSet interface {
 	GetFace() string  // Returns the face name of the current tile
 	GetValue() int    // Returns the value of the current tile
 	GetImage() string // Returns a filename for the tile image
-	GetTile() *Tile   // Returns a pointer to the tile instance
+	GetTile(renderer *sdl.Renderer) *Tile   // Returns a pointer to the tile instance
 }
 
 // Constructor / Initialiser
@@ -47,6 +52,7 @@ func (t *Tile) init() {
 	t.imgpath = ""
 	t.face = make(map[int]string)
 	t.value = make(map[int]int)
+	t.facetexture = make(map[int]*sdl.Texture)
 	t.currface = 1 // Keeping initial values simple
 	t.lastface = 0 // so we can use a simple inc to
 	t.nextface = 2 // to move indexes
@@ -67,6 +73,11 @@ func (t *Tile) load() error {
 	for _, f := range files {
 		if strings.Contains(f.Name(), ".png") {
 			t.face[count] = f.Name()
+			t.facetexture[count], err = img.LoadTexture(t.renderer,(t.imgpath +f.Name()))
+			if err != nil {
+				err = fmt.Errorf("Tile failed to load image into textuer with error: %v ", err)
+				return err
+			}
 			count++
 			//filenames should be name_value.png
 			s := strings.Split(f.Name(), "_")
@@ -134,13 +145,26 @@ func (t *Tile) GetImage() string {
 	return t.imgpath + t.face[t.currface]
 }
 
+// GetTexture returns pointer to sdl.Texture for this tile
+func (t *Tile) GetTexture() *sdl.Texture{
+	return t.facetexture[t.currface]
+}
+
 // GetTile Creates & Returns a pointer to a new tile instance, Factory style
-func (t *Tile) GetTile() *Tile {
+func (t *Tile) GetTile(r *sdl.Renderer) *Tile {
 	var i = new(Tile)
+	i.renderer = r
 	i.init()
 	err := i.load()
 	if err != nil {
 		panic(err)
 	}
 	return i
+}
+
+// SetRenderer expects an sdl.Renderer pointer, which it sets on the Tile structure. This renderer is required
+// by the SDL img.LoadImage () which also requires *sdl.Texture.
+// See https://godoc.org/github.com/veandco/go-sdl2/img#LoadTexture
+func (t *Tile) SetRenderer(r *sdl.Renderer) {
+	t.renderer = r
 }

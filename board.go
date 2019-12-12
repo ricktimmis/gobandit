@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/veandco/go-sdl2/sdl"
+)
 
 type Board struct {
 	Cols  int
@@ -10,7 +13,7 @@ type Board struct {
 
 }
 
-func (b *Board) Init(c int, r int, t TileSet) error {
+func (b *Board) Init(c int, r int, t TileSet, rndr *sdl.Renderer) error {
 
 	// Set Row, Col values on the Board for reference
 	b.Cols = c
@@ -21,7 +24,7 @@ func (b *Board) Init(c int, r int, t TileSet) error {
 	*/
 	for row := 0; row < b.Rows; row++ {
 		for col := 0; col < b.Cols; col++ {
-			b.Tiles[row][col] = t.GetTile()
+			b.Tiles[row][col] = t.GetTile(rndr)
 			//b.Tiles[row][col].Init()
 			//b.Tiles[row][col].Load()
 			b.Tiles[row][col].Shuffle()
